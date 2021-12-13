@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO.Ports;
 
 namespace MeasurementForDisplay
 {
@@ -40,17 +41,14 @@ namespace MeasurementForDisplay
                 textColumn.Binding = new Binding(colname);
                 MeasDataGrid.Columns.Add(textColumn);
             }
-
-            // COM port search
-            
+            foreach (string s in SerialPort.GetPortNames()) // COM port search
+            {
+                PortComboBox.Items.Add(s);
+            }
         }
         private void GetCurrent()
         {
-            cp2012.Open("COM2");
-            System.Threading.Thread.Sleep(1000);
-            double current;
-            current = cp2012.GetCurrent(CP2012.Cell_RGBTypes.Blue);
-            LogListbox.Items.Add(current);
+            cp2012.current = cp2012.GetCurrent();
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -73,7 +71,6 @@ namespace MeasurementForDisplay
                 LogListbox.Items.Add(ex.Message);
             }
         }
-
         private void DisconnectBtn_Click(object sender, RoutedEventArgs e)
         {
             ca210.Disconnect();
@@ -93,9 +90,16 @@ namespace MeasurementForDisplay
         private void PatternBtn_Click(object sender, RoutedEventArgs e)
         {
             GetCurrent();
+            MessageBox.Show(cp2012.current);
             //imageWindows.Initialize();
             //imageWindows.ChangeColor(255, 1);
             //imageWindows.Show();
+        }
+
+        private void OpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            string portName = PortComboBox.Text;
+            cp2012.Open(portName);
         }
     }
 }

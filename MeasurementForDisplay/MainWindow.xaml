@@ -12,8 +12,8 @@
             <ColumnDefinition Width="122"/>
             <ColumnDefinition Width="678"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="Pattern" Content="Pattern" HorizontalAlignment="Left" Margin="30,274,0,0" VerticalAlignment="Top" Width="75" 
-                Click="PatternBtn_Click" Height="20"/>
+        <Button x:Name="Pattern" Content="Pattern" HorizontalAlignment="Left" Margin="84,270,0,0" VerticalAlignment="Top" Width="75" 
+                Click="PatternBtn_Click" Height="20" Grid.Column="1"/>
         <ListBox x:Name="LogListbox" Grid.Column="1" HorizontalAlignment="Left" Height="168" Margin="421,241,0,0" VerticalAlignment="Top" Width="224"/>
         <GroupBox Header="Minolta" HorizontalAlignment="Left" Height="115" Margin="10,20,0,0" VerticalAlignment="Top" Width="105">
             <Grid HorizontalAlignment="Left" Height="100" Margin="0,0,0,-7" VerticalAlignment="Top" Width="101">
@@ -28,5 +28,10 @@
             </Grid>
         </GroupBox>
         <DataGrid x:Name="MeasDataGrid" Grid.Column="1" HorizontalAlignment="Left" Height="226" Margin="10,10,0,0" VerticalAlignment="Top" Width="635"/>
+        <GroupBox Header="Current" HorizontalAlignment="Left" Height="100" Margin="12,140,0,0" VerticalAlignment="Top" Width="100"/>
+        <Grid HorizontalAlignment="Left" Height="70" Margin="12,166,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.35,0.48">
+            <Button x:Name="OpenButton" Content="Open" HorizontalAlignment="Left" Margin="12,30,0,0" VerticalAlignment="Top" Width="75" Click="OpenButton_Click"/>
+        </Grid>
+        <ComboBox x:Name="PortComboBox" HorizontalAlignment="Left" Margin="22,166,0,0" VerticalAlignment="Top" Width="81"/>
     </Grid>
 </Window>
