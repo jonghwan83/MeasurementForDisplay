@@ -76,11 +76,8 @@ namespace MeasurementForDisplay
             }
             ESC();
             sp.DiscardInBuffer();
-            string text = (((target != TargetTypes.EEPROM0) && ((target != TargetTypes.PMIC) && target != TargetTypes.GAMIC))) ?
-                $"param? {target} 0x{startAddress.ToString("X6")}" :$"param? {target} 0x{startAddress.ToString("X4")}";
-            sp.WriteLine(text);
-            string str2 = (((target != TargetTypes.EEPROM0) && ((target != TargetTypes.PMIC) && target != TargetTypes.GAMIC))) ?
-                $"parma,{target},0x{0.ToString("X4")}" : $"param,{target},0x{startAddress.ToString("X4")},0x{0.ToString("X4")}";
+            string text = (((target != TargetTypes.EEPROM0) && ((target != TargetTypes.PMIC) && (target != TargetTypes.GAMIC))) && (target != TargetTypes.GAMIC2)) ? $"param? {target} 0x{startAddress.ToString("X6")}" : $"param? {target} 0x{startAddress.ToString("X4")}";
+            string str2 = (((target != TargetTypes.EEPROM0) && ((target != TargetTypes.PMIC) && (target != TargetTypes.GAMIC))) && (target != TargetTypes.GAMIC2)) ? $"param,{target},0x{startAddress.ToString("X6")},0x{0.ToString("X4")}" : $"param,{target},0x{startAddress.ToString("X4")},0x{0.ToString("X4")}";
             int num = str2.Length + 1;
 
             while (true)
