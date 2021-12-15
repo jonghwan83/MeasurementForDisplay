@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 using System.IO.Ports;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -35,7 +36,7 @@ namespace MeasurementForDisplay
             InitializeComponent();
             InitializeChart();
 
-            string[] dataName = new string[] { "No", "Time", "Lv", "Sx", "Sy", "Current" };
+            string[] dataName = new string[] { "No", "Time", "Lv", "Sx", "Sy", "GCM", "Fluke" };
 
             foreach (string colname in dataName)
             {
@@ -80,9 +81,9 @@ namespace MeasurementForDisplay
             public double Lv { get; set; }
             public double Sx { get; set; }
             public double Sy { get; set; }
-            public double Current { get; set; }
+            public double GCM { get; set; }
         }
-        private void MeasWriteData(int milliseconds)
+        private void MeasWriteData(int interval)
         {
             Stopwatch stopwatch = new Stopwatch();
             double remaind;
@@ -90,7 +91,7 @@ namespace MeasurementForDisplay
             Measure();
             ReadData();
             TimeSpan ts = stopwatch.Elapsed;
-            remaind = milliseconds - ts.TotalMilliseconds;
+            remaind = interval - ts.TotalMilliseconds;
             if (remaind > 0)
             {
                 Wait(Convert.ToInt32(remaind));
@@ -98,7 +99,7 @@ namespace MeasurementForDisplay
         }
         private void ReadData()
         {
-            string format = "MM/dd/yyyy HH:mm:ss";
+            string format = "yyyy/MM/dd HH:mm:ss";
             string now = DateTime.Now.ToString(format);
             measured = new Measured {
                 No = MeasDataGrid.Items.Count,
@@ -106,7 +107,7 @@ namespace MeasurementForDisplay
                 Lv = Math.Round(ca210.lv, 4),
                 Sx = Math.Round(ca210.sx, 4),
                 Sy = Math.Round(ca210.sy, 4),
-                Current = Math.Round(cp2012.current, 4)
+                GCM = Math.Round(cp2012.current, 4)
             };
             MeasDataGrid.Items.Add(measured);
             MeasDataGrid.ScrollIntoView(measured);
@@ -181,12 +182,14 @@ namespace MeasurementForDisplay
                 LogListbox.Items.Add(ex.Message);
             }
         }        
-        private void OpenButton_Click(object sender, RoutedEventArgs e)
+        private void OpenBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 string portName = PortComboBox.Text;
                 cp2012.Open(portName);
+                LogListbox.Items.Add(portName + " 연결");
+                OpenBtn.IsEnabled = false;
             }
             catch (Exception ex)
             {
@@ -198,6 +201,8 @@ namespace MeasurementForDisplay
             try
             {
                 cp2012.Close();
+                LogListbox.Items.Add("COM 해제");
+                OpenBtn.IsEnabled = true;
             } catch (Exception ex)
             {
                 LogListbox.Items.Add(ex.Message);
@@ -292,21 +297,26 @@ namespace MeasurementForDisplay
                 LogListbox.Items.Add(ex.Message);
             }
         }
-        private void Meas_Click(object sender, RoutedEventArgs e)
+        private void MeasBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                isAbort = false;
-                LogListbox.Items.Add("Measuring...");
+                isAbort = false;                
                 if (imageWindow.isOn == false)
                 {
                     LogListbox.Items.Add("패턴이 없습니다.");
                     return;
-                }
+                }                
                 string[] time = TimeTextBox.Text.Split(',');
                 string[] grays = GrayTextBox.Text.Split(',');
                 string[] colors = ColorTextBox.Text.Split(',');
-                
+
+                if (time.Length != grays.Length | time.Length != colors.Length)
+                {
+                    LogListbox.Items.Add("입력 크기가 다릅니다.");
+                    return;
+                }
+                LogListbox.Items.Add("Measuring...");
                 for (int i = 0; i < time.Length; i++)
                 {
                     imageWindow.ChangeColor(byte.Parse(grays[i]), colors[i]);
@@ -319,7 +329,7 @@ namespace MeasurementForDisplay
                             stopwatch.Stop();
                             return;
                         }
-                        MeasWriteData(990);
+                        MeasWriteData(1000);
                         TimeSpan ts = stopwatch.Elapsed;
                         if (double.Parse(time[i]) - ts.TotalSeconds <= 0)
                         {
@@ -328,7 +338,7 @@ namespace MeasurementForDisplay
                         }
                     }                    
                 }
-                System.Media.SystemSounds.Beep.Play();
+                imageWindow.Initialize();
                 LogListbox.Items.Add("Complete!!");
             } catch (Exception ex)
             {
@@ -340,6 +350,78 @@ namespace MeasurementForDisplay
         {
             MeasDataGrid.Items.Clear();
             InitializeChart();
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MeasDataGrid.SelectAllCells();
+            MeasDataGrid.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+            ApplicationCommands.Copy.Execute(null, MeasDataGrid);
+            MeasDataGrid.UnselectAllCells();
+
+            string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog
+            {
+                Filter = "CSV (*.csv)|*.csv",
+                FileName = "Output" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".csv"
+            };
+
+            bool fileError = false;
+            if(saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if (File.Exists(saveFileDialog.FileName))
+                {
+                    try
+                    {
+                        File.Delete(saveFileDialog.FileName);
+                    } catch (IOException ex)
+                    {
+                        fileError = true;
+                        MessageBox.Show("지울 수 없음: " + ex.Message);
+                    }
+                }
+                if (!fileError)
+                {
+                    try
+                    {
+                        File.WriteAllText(saveFileDialog.FileName, result, UnicodeEncoding.UTF8);
+                        MessageBox.Show("완료 !!");
+                    } catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
+                }
+            }
+        }
+        private void GammaBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                isAbort = false;                
+                if (imageWindow.isOn == false)
+                {
+                    LogListbox.Items.Add("패턴이 없습니다.");
+                    return;
+                }
+                LogListbox.Items.Add("Measuring...");
+                for (int i=0; i<256; i = i + 4)
+                {
+                    if (isAbort == true)
+                    {
+                        return;
+                    }
+                    imageWindow.ChangeColor(Convert.ToByte(i), "W");
+                    MeasWriteData(980);
+                }
+                imageWindow.ChangeColor(255, "W");
+                MeasWriteData(980);
+                imageWindow.Initialize();
+                LogListbox.Items.Add("Complete !!");
+            } catch (Exception ex)
+            {
+                LogListbox.Items.Add(ex.Message);
+            }
         }
     }
 }
