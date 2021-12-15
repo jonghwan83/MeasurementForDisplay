@@ -11,6 +11,7 @@ namespace MeasurementForDisplay
     {
         private SerialPort sp = new SerialPort();
         public double current = 0.0;
+        public bool isOpen = false;
 
         // COM port search in MainWindow
         public enum TargetTypes
@@ -30,12 +31,6 @@ namespace MeasurementForDisplay
             GAMIC2 = 12,
             PMIC = 13
         }
-        public enum Cell_RGBTypes
-        {
-            Red = 0,
-            Green = 1,
-            Blue = 2
-        }
         public void Open(string portName)
         {
             sp.PortName = portName;
@@ -46,8 +41,14 @@ namespace MeasurementForDisplay
             sp.StopBits = StopBits.One;
             sp.ReadTimeout = 500;
             sp.Open();
+            isOpen = sp.IsOpen;
         }
-        public double GetCurrent()
+        public void Close()
+        {
+            sp.Close();
+            isOpen = sp.IsOpen;
+        }
+        public void GetCurrent()
         {
             string str;
             int num = 0;
@@ -75,7 +76,7 @@ namespace MeasurementForDisplay
             {
                 num2 = Convert.ToDouble(strArray[1]) / 0x8000;
             }
-            return num2;
+            current = num2;
         }
         
         private void ESC()

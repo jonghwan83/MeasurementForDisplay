@@ -3,35 +3,70 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MeasurementForDisplay"
+        xmlns:live="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="Measurement (Park Jonghwan)" Height="461" Width="800"
+        Title="Measurement (Park Jonghwan)" Height="480" Width="1000"
         Closing="Window_Closing">
     <Grid Margin="0,0,2,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="122"/>
-            <ColumnDefinition Width="678"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="668"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="Pattern" Content="Pattern" HorizontalAlignment="Left" Margin="84,270,0,0" VerticalAlignment="Top" Width="75" 
-                Click="PatternBtn_Click" Height="20" Grid.Column="1"/>
-        <ListBox x:Name="LogListbox" Grid.Column="1" HorizontalAlignment="Left" Height="168" Margin="421,241,0,0" VerticalAlignment="Top" Width="224"/>
-        <GroupBox Header="Minolta" HorizontalAlignment="Left" Height="115" Margin="10,20,0,0" VerticalAlignment="Top" Width="105">
-            <Grid HorizontalAlignment="Left" Height="100" Margin="0,0,0,-7" VerticalAlignment="Top" Width="101">
+        <ListBox x:Name="LogListbox" Grid.Column="1" Height="191" Margin="496,0,-60,17" VerticalAlignment="Bottom"/>
+        <GroupBox Header="Minolta" HorizontalAlignment="Left" Height="78" Margin="10,316,0,0" VerticalAlignment="Top" Width="105">
+            <Grid HorizontalAlignment="Left" Height="69" Margin="0,0,-8,0" VerticalAlignment="Top" Width="101">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="93*"/>
                     <ColumnDefinition Width="8*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="ZeroCalBtn" Content="Zero Cal" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="75"
+                <Button x:Name="ZeroCalBtn" Content="Zero Cal" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"
             Click="ZeroCalBtn_Click" Height="20"/>
-                <Button x:Name="DisconnectBtn" Content="Disconnect" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="75" Click="DisconnectBtn_Click"/>
-                <Button x:Name="Meas1Btn" Content="1 Meas" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Click="Meas1Btn_Click"/>
+                <Button x:Name="DisconnectBtn" Content="Disconnect" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="DisconnectBtn_Click"/>
             </Grid>
         </GroupBox>
-        <DataGrid x:Name="MeasDataGrid" Grid.Column="1" HorizontalAlignment="Left" Height="226" Margin="10,10,0,0" VerticalAlignment="Top" Width="635"/>
-        <GroupBox Header="Current" HorizontalAlignment="Left" Height="100" Margin="12,140,0,0" VerticalAlignment="Top" Width="100"/>
-        <Grid HorizontalAlignment="Left" Height="70" Margin="12,166,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.35,0.48">
-            <Button x:Name="OpenButton" Content="Open" HorizontalAlignment="Left" Margin="12,30,0,0" VerticalAlignment="Top" Width="75" Click="OpenButton_Click"/>
+        <DataGrid x:Name="MeasDataGrid" Grid.Column="1" HorizontalAlignment="Left" Height="216" Margin="10,10,-60,0" 
+                  VerticalAlignment="Top" Width="719"
+                  EnableColumnVirtualization="True" EnableRowVirtualization="True"/>
+        <GroupBox Header="GCM" HorizontalAlignment="Left" Height="111" Margin="127,316,0,0" VerticalAlignment="Top" Width="100" />
+        <Grid HorizontalAlignment="Left" Height="74" Margin="124,353,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.35,0.48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="41*"/>
+                <ColumnDefinition Width="9*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="OpenBtn" Content="Open" HorizontalAlignment="Left" Margin="15,16,0,0" VerticalAlignment="Top" Width="75" Click="OpenButton_Click" Grid.ColumnSpan="2"/>
+            <Button x:Name="CloseBtn" Content="Close" HorizontalAlignment="Left" Margin="15,41,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2" Click="CloseBtn_Click"/>
         </Grid>
-        <ComboBox x:Name="PortComboBox" HorizontalAlignment="Left" Margin="22,166,0,0" VerticalAlignment="Top" Width="81"/>
+        <ComboBox x:Name="PortComboBox" HorizontalAlignment="Left" Margin="136,342,0,0" VerticalAlignment="Top" Width="81" Height="22"/>
+        <Button x:Name="Meas1Btn" Content="1 Meas" HorizontalAlignment="Left" Margin="167,27,0,0" VerticalAlignment="Top" Width="75" Click="Meas1Btn_Click" Height="20"/>
+        <live:CartesianChart x:Name="DataChart" Margin="10,241,178,14" Grid.Column="1" Hoverable="False" DataTooltip="{x:Null}"
+                             DisableAnimations="True"/>
+        <Button x:Name="ContinuousBtn" Content="continue" HorizontalAlignment="Left" Margin="167,53,0,0" VerticalAlignment="Top" Width="75" Click="ContinuousBtn_Click" Height="20"/>
+        <Button x:Name="AbortBtn" Content="Abort" HorizontalAlignment="Left" Margin="167,77,0,0" VerticalAlignment="Top" Width="75" Click="AbortBtn_Click" Height="20"/>
+        <GroupBox Header="Image Pattern" HorizontalAlignment="Left" Height="133" Margin="10,163,0,0" VerticalAlignment="Top" Width="120">
+            <Grid HorizontalAlignment="Left" Height="115" Margin="-3,0,-2,-4" VerticalAlignment="Top" Width="113">
+                <Button x:Name="PatternBtn" Content="Pattern" HorizontalAlignment="Left" Margin="17,6,0,0" VerticalAlignment="Top" Width="75" 
+                Click="PatternBtn_Click" Height="20"/>
+                <Button x:Name="PatternCloseBtn" Content="Close" HorizontalAlignment="Left" Margin="17,33,0,0" VerticalAlignment="Top" Width="75" Click="PatternCloseBtn_Click"/>
+                <TextBox x:Name="WidthTextBox" HorizontalAlignment="Left" Height="23" Margin="31,58,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="77" TextChanged="WidthTextBox_TextChanged"/>
+                <Label Content="W" HorizontalAlignment="Left" Margin="0,55,0,0" VerticalAlignment="Top" Width="31"/>
+                <TextBox x:Name="HeightTextBox" HorizontalAlignment="Left" Height="23" Margin="31,86,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="77" TextChanged="HeightTextBox_TextChanged"/>
+                <Label Content="H" HorizontalAlignment="Left" Margin="0,82,0,0" VerticalAlignment="Top" Width="31"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Sticking" HorizontalAlignment="Left" Height="149" Margin="10,10,0,0" VerticalAlignment="Top" Width="130">
+            <Grid HorizontalAlignment="Left" Height="132" VerticalAlignment="Top" Width="120" Margin="0,0,-2,-5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="TimeTextBox" HorizontalAlignment="Left" Height="23" Margin="20,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="100"/>
+                <TextBox x:Name="GrayTextBox" HorizontalAlignment="Left" Height="24" Margin="20,38,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="100"/>
+                <TextBox x:Name="ColorTextBox" HorizontalAlignment="Left" Height="23" Margin="20,67,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="100"/>
+                <Label Content="T" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Height="23"/>
+                <Label Content="G" HorizontalAlignment="Left" Margin="0,38,0,0" VerticalAlignment="Top" Height="24"/>
+                <Label Content="C" HorizontalAlignment="Left" Margin="0,67,0,0" VerticalAlignment="Top" Height="23"/>
+                <Button x:Name="Meas" Content="Meas" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" VerticalAlignment="Top" Width="100" Click="Meas_Click"/>
+            </Grid>
+        </GroupBox>
+        <Button x:Name="ClearBtn" Grid.ColumnSpan="2" Content="Clear" HorizontalAlignment="Left" Margin="181,206,0,0" VerticalAlignment="Top" Width="75" Click="ClearBtn_Click"/>
     </Grid>
 </Window>

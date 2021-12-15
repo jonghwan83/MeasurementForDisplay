@@ -13,10 +13,12 @@ namespace MeasurementForDisplay
         public double lv = 0;
         public double sx = 0;
         public double sy = 0;
+        public bool isConnected = false;
         
         public void Connect()
         {
             probe.AutoConnect();
+            isConnected = true;
         }
         public void CalZero()
         {

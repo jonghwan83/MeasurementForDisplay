@@ -13,10 +13,11 @@ namespace MeasurementForDisplay
 {
     class ImageGenerator
     {
-        private ImageWindow imageWindow = new ImageWindow();
+        public ImageWindow imageWindow = new ImageWindow();
         private ImageWindow backgroundImage = new ImageWindow();
         private Screen[] screens;
         private Rectangle secondBounds = new Rectangle();
+        public bool isOn = false;
         
         public void Initialize()
         {
@@ -36,32 +37,58 @@ namespace MeasurementForDisplay
             backgroundImage.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
             backgroundImage.Left = mainBounds.Width;
             backgroundImage.Top = 0;
+            imageWindow.Topmost = true;
+            
+            ChangeColor(32, "W"); // 초기 32 gray
         }
         public void Show()
         {
             backgroundImage.Show();
             imageWindow.Show();
+            isOn = true;
         }
         public void Close()
         {
             imageWindow.Close();
             backgroundImage.Close();
+            isOn = false;
         }
-        public void ChangeColor(byte gray, int color)
+        public void Hide()
+        {
+            imageWindow.Hide();
+            backgroundImage.Hide();
+            isOn = false;
+        }
+        public double[] GetSize()
+        {
+            double[] size = new double[]
+            {
+                imageWindow.Width,
+                imageWindow.Height
+            };
+            
+            return size;
+        }
+        public void ChangeSize(double width, double height)
+        {
+            imageWindow.Width = width;
+            imageWindow.Height = height;
+        }
+        public void ChangeColor(byte gray, string color)
         {
             byte red, green, blue;
             switch (color)
             {
-                case 1: // white
+                case "W": // white
                     red = gray; green = gray; blue = gray;
                     break;
-                case 2: // red
+                case "R": // red
                     red = gray; green = 0; blue = 0;
                     break;
-                case 3: // green
+                case "G": // green
                     red = 0; green = gray; blue = 0;
                     break;
-                case 4: //blue
+                case "B": //blue
                     red = 0; green = 0; blue = gray;
                     break;
                 default:
