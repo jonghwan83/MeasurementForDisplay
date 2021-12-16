@@ -412,6 +412,7 @@ namespace MeasurementForDisplay
                         return;
                     }
                     imageWindow.ChangeColor(Convert.ToByte(i), "W");
+                    Wait(20);
                     MeasWriteData(980);
                 }
                 imageWindow.ChangeColor(255, "W");
