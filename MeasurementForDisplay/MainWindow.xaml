@@ -41,8 +41,8 @@
         <live:CartesianChart x:Name="DataChart" Margin="10,241,178,14" Grid.Column="1" Hoverable="False" DataTooltip="{x:Null}"
                              DisableAnimations="True"/>
         <Button x:Name="ContinuousBtn" Content="continue" HorizontalAlignment="Left" Margin="181,36,0,0" VerticalAlignment="Top" Width="75" Click="ContinuousBtn_Click" Height="20" Grid.ColumnSpan="2"/>
-        <Button x:Name="AbortBtn" Content="Abort" HorizontalAlignment="Left" Margin="181,181,0,0" VerticalAlignment="Top" Width="75" Click="AbortBtn_Click" Height="20" Grid.ColumnSpan="2"/>
-        <GroupBox Header="Image Pattern" HorizontalAlignment="Left" Height="133" Margin="10,163,0,0" VerticalAlignment="Top" Width="120">
+        <Button x:Name="AbortBtn" Content="Abort" HorizontalAlignment="Left" Margin="181,134,0,0" VerticalAlignment="Top" Width="75" Click="AbortBtn_Click" Height="20" Grid.ColumnSpan="2"/>
+        <GroupBox Header="Image Pattern" HorizontalAlignment="Left" Height="133" Margin="7,171,0,0" VerticalAlignment="Top" Width="120">
             <Grid HorizontalAlignment="Left" Height="115" Margin="-3,0,-2,-4" VerticalAlignment="Top" Width="113">
                 <Button x:Name="PatternBtn" Content="Pattern" HorizontalAlignment="Left" Margin="17,6,0,0" VerticalAlignment="Top" Width="75" 
                 Click="PatternBtn_Click" Height="20"/>
@@ -67,8 +67,15 @@
                 <Button x:Name="MeasBtn" Content="Meas" HorizontalAlignment="Left" Height="23" Margin="9,97,0,0" VerticalAlignment="Top" Width="100" Click="MeasBtn_Click"/>
             </Grid>
         </GroupBox>
-        <Button x:Name="ClearBtn" Grid.ColumnSpan="2" Content="Clear" HorizontalAlignment="Left" Margin="181,156,0,0" VerticalAlignment="Top" Width="75" Click="ClearBtn_Click"/>
-        <Button x:Name="SaveBtn" Grid.ColumnSpan="2" Content="Save" HorizontalAlignment="Left" Margin="181,206,0,0" VerticalAlignment="Top" Width="75" Click="SaveBtn_Click"/>
+        <Button x:Name="ClearBtn" Grid.ColumnSpan="2" Content="Clear" HorizontalAlignment="Left" Margin="181,109,0,0" VerticalAlignment="Top" Width="75" Click="ClearBtn_Click"/>
+        <Button x:Name="SaveBtn" Grid.ColumnSpan="2" Content="Save" HorizontalAlignment="Left" Margin="181,159,0,0" VerticalAlignment="Top" Width="75" Click="SaveBtn_Click"/>
         <Button x:Name="GammaBtn" Grid.ColumnSpan="2" Content="Gamma" HorizontalAlignment="Left" Margin="181,61,0,0" VerticalAlignment="Top" Width="75" Click="GammaBtn_Click"/>
+        <GroupBox Header="Fluke" HorizontalAlignment="Left" Height="113" Margin="136,192,0,0" VerticalAlignment="Top" Width="100">
+            <Grid HorizontalAlignment="Left" Height="94" Margin="-5,0,-2,-3" VerticalAlignment="Top" Width="95">
+                <Button x:Name="FlukeOpenBtn" Content="Open" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="75" Click="FlukeOpenBtn_Click"/>
+                <Button x:Name="FlukeCloseBtn" Content="Close" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="75" Click="FlukeCloseBtn_Click"/>
+                <ComboBox x:Name="FlukePortComboBox" HorizontalAlignment="Left" Margin="5,8,0,0" VerticalAlignment="Top" Width="85"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

@@ -43,7 +43,6 @@ namespace MeasurementForDisplay
         {
             // disconnect
             probe.SingleCa.RemoteMode = 0;
-            isConnected = false;
         }
     }
 }

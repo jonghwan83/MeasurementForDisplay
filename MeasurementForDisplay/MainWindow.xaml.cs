@@ -28,6 +28,7 @@ namespace MeasurementForDisplay
         ImageGenerator imageWindow = new ImageGenerator();
         CA210 ca210 = new CA210();
         CP2012 cp2012 = new CP2012();
+        FLUKE fluke = new FLUKE();
         Measured measured;
 
         bool isAbort = false;
@@ -50,6 +51,7 @@ namespace MeasurementForDisplay
             foreach (string s in SerialPort.GetPortNames()) // COM port search
             {
                 PortComboBox.Items.Add(s);
+                FlukePortComboBox.Items.Add(s);
             }
 
             TimeTextBox.Text = "20, 10, 20";
@@ -82,6 +84,7 @@ namespace MeasurementForDisplay
             public double Sx { get; set; }
             public double Sy { get; set; }
             public double GCM { get; set; }
+            public string Fluke { get; set; }
         }
         private void MeasWriteData(int interval)
         {
@@ -107,7 +110,8 @@ namespace MeasurementForDisplay
                 Lv = Math.Round(ca210.lv, 4),
                 Sx = Math.Round(ca210.sx, 4),
                 Sy = Math.Round(ca210.sy, 4),
-                GCM = Math.Round(cp2012.current, 4)
+                GCM = Math.Round(cp2012.current, 4),
+                Fluke = fluke.value
             };
             MeasDataGrid.Items.Add(measured);
             MeasDataGrid.ScrollIntoView(measured);
@@ -120,7 +124,7 @@ namespace MeasurementForDisplay
             {
                 Title = "Y",
                 Values = new ChartValues<double> { },
-                PointGeometry = null,       
+                PointGeometry = null,
             });
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -129,6 +133,10 @@ namespace MeasurementForDisplay
         }
         private void Measure() // measure and gather data
         {
+            if (fluke.isOpen == true)
+            {
+                fluke.GetFluke();
+            }
             if (ca210.isConnected == true)
             {
                 ca210.Measure();
@@ -329,7 +337,8 @@ namespace MeasurementForDisplay
                             stopwatch.Stop();
                             return;
                         }
-                        MeasWriteData(1000);
+                        Wait(20);
+                        MeasWriteData(980);
                         TimeSpan ts = stopwatch.Elapsed;
                         if (double.Parse(time[i]) - ts.TotalSeconds <= 0)
                         {
@@ -423,6 +432,22 @@ namespace MeasurementForDisplay
             {
                 LogListbox.Items.Add(ex.Message);
             }
+        }
+
+        private void FlukeOpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string portName;
+            portName = FlukePortComboBox.Text;
+            fluke.Open(portName);
+            FlukeOpenBtn.IsEnabled = false;
+            LogListbox.Items.Add(portName + "연결");
+        }
+
+        private void FlukeCloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            fluke.Close();
+            FlukeOpenBtn.IsEnabled = true;
+            LogListbox.Items.Add("Fluke 해제");
         }
     }
 }

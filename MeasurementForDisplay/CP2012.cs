@@ -14,23 +14,6 @@ namespace MeasurementForDisplay
         public bool isOpen = false;
 
         // COM port search in MainWindow
-        public enum TargetTypes
-        {
-            MASTER = 0,
-            SLAVE = 1,
-            EEPROM0 = 2,
-            GCM = 3,
-            FRONT = 4,
-            LOGO = 5,
-            NPCP = 6,
-            AP = 7,
-            MASTER_SLAVE = 8,
-            ANALOG = 9,
-            PLL = 10,
-            GAMIC = 11,
-            GAMIC2 = 12,
-            PMIC = 13
-        }
         public void Open(string portName)
         {
             sp.PortName = portName;
@@ -77,8 +60,7 @@ namespace MeasurementForDisplay
                 num2 = Convert.ToDouble(strArray[1]) / 0x8000;
             }
             current = num2;
-        }
-        
+        }        
         private void ESC()
         {
             byte[] buffer = new byte[] { 0x1b }; // 0x1b는 PCC 소스코드에서 복사한 내용
